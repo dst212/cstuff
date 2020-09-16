@@ -357,7 +357,7 @@ bool ncpopup_bool(const int starty, const int startx, int height, const int widt
 			break;
 		}
 		ncpopup_printmsg(w, height, width, is_oneline, outputlenght, output, &jolly_var);
-		mvncprint(w, height + 3 - 2, width / 2 + 2 - width_shift,
+		mvncprint(w, height + 3 - 2, (width + 2) / 2 - width_shift,
 			"@P %s @P @P %s @P",
 			r ? revcolor(color) : color,
 			yes_msg,
