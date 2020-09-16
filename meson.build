@@ -7,25 +7,25 @@ inc = include_directories('cstuff')
 libs = [
 	shared_library(
 		'mathstuff',
-		'mathstuff.h',
+		'csutff/mathstuff.h',
 		include_directories: inc,
 		install: true
 	),
 	shared_library(
 		'strstuff',
-		'strstuff.h',
+		'cstuff/strstuff.h',
 		include_directories: inc,
 		install: true
 	),
 	shared_library(
 		'chstuff',
-		'chstuff.h',
+		'cstuff/chstuff.h',
 		include_directories: inc,
 		install: true
 	),
 	shared_library(
 		'ncstuff',
-		'ncstuff.h',
+		'cstuff/ncstuff.h',
 		include_directories: inc,
 		install: true
 	)
