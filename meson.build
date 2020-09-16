@@ -7,7 +7,7 @@ inc = include_directories('cstuff')
 libs = [
 	shared_library(
 		'mathstuff',
-		'csutff/mathstuff.h',
+		'cstuff/mathstuff.h',
 		include_directories: inc,
 		install: true
 	),
