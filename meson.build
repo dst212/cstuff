@@ -31,4 +31,4 @@ libs = [
 	)
 ]
 
-libsimple_dep = declare_dependency(include_directories: inc, link_with: libs)
+cstuff_dep = declare_dependency(include_directories: inc, link_with: libs)
