@@ -336,7 +336,7 @@ bool ncpopup_bool(const int starty, const int startx, int height, const int widt
 	if(height <= 0)
 		height = outputlenght / width;
 	const bool is_oneline = (height == 1 && outputlenght > width);
-	const int width_shift = (strlen(yes_msg) + strlen(no_msg) + 5) / 2; //yes and no's size + blank spaces
+	const int width_shift = (strlen(yes_msg) + strlen(no_msg) + 5) / 2 + 1; //yes and no's size + blank spaces
 	bool r = true;
 	int ch = ERR, jolly_var = 0;
 	WINDOW*w;
