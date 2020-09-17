@@ -5,15 +5,15 @@ project('cstuff', 'c', version: '1.0', license: 'lgplv3', default_options: 'c_st
 inc = include_directories('cstuff')
 cc = meson.get_compiler('c')
 
-# mathstuff library
-mathstuff = shared_library(
-	'mathstuff',
-	'cstuff/mathstuff.h',
+# miscstuff library
+miscstuff = shared_library(
+	'miscstuff',
+	'cstuff/miscstuff.h',
 	include_directories: inc,
 	dependencies: cc.find_library('m'),
 	install: true
 )
-mathstuff_dep = declare_dependency(include_directories: inc, link_with: mathstuff)
+miscstuff_dep = declare_dependency(include_directories: inc, link_with: miscstuff)
 
 # strstuff library
 strstuff = shared_library(
@@ -45,7 +45,7 @@ ncstuff_dep = declare_dependency(include_directories: inc, link_with: ncstuff)
 
 # All the libraries in one dependency
 cstuff = [
-	mathstuff,
+	miscstuff,
 	strstuff,
 	chstuff,
 	ncstuff
