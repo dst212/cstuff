@@ -11,11 +11,10 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
-#include <unistd.h>
-#define msleep(ms) usleep((ms) * 1000)
 #include <ncurses.h>
 
 #include "strstuff.h"
+#include "miscstuff.h"
 
 #define ncflags(w) do { /*cbreak(); noecho();*/ keypad(w, true); nodelay(w, false); scrollok(w, false); } while(0)
 
