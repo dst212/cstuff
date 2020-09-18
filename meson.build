@@ -2,7 +2,6 @@
 
 project('cstuff', 'c', version: '1.0', license: 'lgplv3', default_options: 'c_std=c11')
 
-inc = include_directories('cstuff')
 cc = meson.get_compiler('c')
 
 # miscstuff library
