@@ -18,7 +18,7 @@ extern char*strreverse(char*);
 extern size_t findinstr(const char, const char*,const size_t);
 extern size_t strfind(const char*, const char*);
 
-extern int str2num(const char*, const short, const size_t);
+extern int str2num(const char*, const short);
 extern char*num2str(int, char*, const short);
 
 extern bool chrange(const char ch, const char*);

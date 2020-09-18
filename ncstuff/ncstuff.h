@@ -39,10 +39,10 @@ extern void ncfillcol(WINDOW*, const int, const int, int, const char, const shor
 extern void ncfillwin(WINDOW*, const char, const short);
 
 extern size_t ncprint(WINDOW*, const char*, ...);
-extern size_t ncprintv(WINDOW*, const char*);
+extern void ncprintv(WINDOW*, const char*);
 #define mvncprint(w, y, x, msg, ...)	(wmove((w), (y), (x)) == ERR ? ERR : ncprint((w), msg __VA_OPT__(,) __VA_ARGS__))
 #define mvncprintv(w, y, x, msg, ...) (wmove((w), (y), (x)) == ERR ? ERR : ncprintv((w), msg __VA_OPT__(,) __VA_ARGS__))
-//print a colorful message and wait for a input key to be pressed
+//print a color-formattable message and wait for a input key to be pressed
 #define ncpause(w, msg, ...)			do { ncprint((w), msg __VA_OPT__(,) __VA_ARGS__); wrefresh(w); wgetch(w); waddch(w, '\n'); } while(0)
 #define mvncpause(w, y, x, msg, ...)	do { wmove((w), (y), (x)); ncpause((w), msg __VA_OPT__(,) __VA_ARGS__); } while(0)
 
@@ -56,7 +56,7 @@ extern size_t ncprintv(WINDOW*, const char*);
 //I don't like the above macro, probably will be removed
 
 //input functions
-extern size_t ncscan(const int, const int, const int, const int, const int, char*, const char*, const short);
+extern size_t ncscan(const int, const int, const int, const int, char*, const char*, const short);
 extern char ncask(WINDOW*, const char*, const char*);
 
 extern short ncnumber(WINDOW*, const short, const short, short*, const short min, const short);
@@ -69,7 +69,7 @@ extern int8_t ncnumberchar(WINDOW*, const short, const short, int8_t*, const sho
 extern void ncpopup_printmsg(WINDOW*, const int, const int, const bool, const size_t, const char*, int*);
 
 extern void ncpopup_info(const int, const int, int, const int, const short, const char*, const char*);
-extern void ncpopup_bool(const int, const int, int, const int, const short, const char*, const char*, const char*);
+extern bool ncpopup_bool(const int, const int, int, const int, const short, const char*, const char*, const char*);
 
 extern int ncmenu(const int, const int, const int, const int, const char**, const short, const short);
 

@@ -149,8 +149,8 @@ size_t ncscan(const int starty, const int startx, const int length, const int ma
 	char*rinput = (char*)malloc(sizeof(char) * (rSize + 1)); //right side of the input
 	WINDOW*w;
 	w = newwin(1, length, starty, startx);
-	strfill(input + l, 0, maxSize - l); //reset the array
-	strfill(rinput, 0, rSize); //and also the input on the right of the cursor
+	memset(input + l, 0, maxSize - l); //reset the array
+	memset(rinput, 0, rSize); //and also the input on the right of the cursor
 	/*	rinput is used as a faster way instead of shifting all the string when a
 	char is added in the middle, in the end all the ripunt content from the
 	last '\0' to the end is copied to the input string	*/
@@ -234,7 +234,7 @@ short ncnumber(WINDOW*w, const short y, const short x, short*toChange, const sho
 			case KEY_UP: case 'w':
 				++(*toChange);
 				break;
-			case KEY_DOWN: case 's';
+			case KEY_DOWN: case 's':
 				--(*toChange);
 				break;
 		}
@@ -360,10 +360,10 @@ int ncmenu(const int starty, const int startx, const int height, const int width
 		ch = wgetch(w);
 		setcolor(w, color); mvncprint(w, i, 0, choices[i]);
 		switch(ch) {
-			case KEY_DOWN:
+			case KEY_DOWN: case 's':
 				i = (i + 1) % height;
 				break;
-			case KEY_UP:
+			case KEY_UP: case 'w':
 				i = (i <= 0 ? height : i) - 1;
 				break;
 			default:

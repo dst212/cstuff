@@ -51,8 +51,7 @@ char*num2str(int input, char*output, const short base) {
 		input /= base;
 	}
 	output[i] = 0;
-	strreverse(output);
-	return output;
+	return strreverse(output);
 }
 
 bool chrange(const char ch, const char*allowed) {
