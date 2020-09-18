@@ -19,7 +19,7 @@ miscstuff_dep = declare_dependency(include_directories: miscstuff_inc, link_with
 strstuff_inc = include_directories('strstuff')
 strstuff = shared_library(
 	'strstuff',
-	'cstuff/strstuff.h',
+	'strstuff/strstuff.h',
 	include_directories: strstuff_inc,
 	install: true
 )
@@ -29,7 +29,7 @@ strstuff_dep = declare_dependency(include_directories: strstuff_inc, link_with: 
 chstuff_inc = include_directories('chstuff')
 chstuff = shared_library(
 	'chstuff',
-	'cstuff/chstuff.h',
+	'chstuff/chstuff.h',
 	include_directories: chstuff_inc,
 	install: true
 )
@@ -39,7 +39,7 @@ chstuff_dep = declare_dependency(include_directories: chstuff_inc, link_with: ch
 ncstuff_inc = include_directories('ncstuff')
 ncstuff = shared_library(
 	'ncstuff',
-	'cstuff/ncstuff.h',
+	'ncstuff/ncstuff.h',
 	include_directories: ncstuff_inc,
 	dependencies: cc.find_library('ncurses'),
 	install: true
