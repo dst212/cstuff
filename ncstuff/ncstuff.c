@@ -3,26 +3,27 @@
  * This work is licensed under the LGPLv3, see /LICENSE
  */
 
-//This header is part of cstuff
-//header used for some ncurses function
+//INIT AND MISC FUNCTIONS
 
-#ifndef __NCSTUFF_H
-#define __NCSTUFF_H
+void ncflags(WINDOW*w) {
+	/*cbreak(); noecho();*/
+	keypad(w, true);
+	nodelay(w, false);
+	scrollok(w, false);
+}
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <unistd.h>
-#define msleep(ms) usleep((ms) * 1000)
-#include <ncurses.h>
-
-#include "strstuff.h"
-
-#define ncflags(w) do { /*cbreak(); noecho();*/ keypad(w, true); nodelay(w, false); scrollok(w, false); } while(0)
-
-#define NC_EXIT 27
-#define NC_ENTER (int)'\n'
-#define QUIT_KEYS 'q': case NC_EXIT: case KEY_EXIT //to use in a switch-case
-#define isQuitKey(ch) (tolower(ch) == 'q' || ch == NC_EXIT  || ch == KEY_EXIT)
+void nccolors(void) { //color init
+	int i;
+	if(has_colors()) {
+		start_color();
+		for(i = 0; i < 256; i++)
+			init_pair(i, i % 16, i / 16);
+	} else {
+		wprintw(stdscr, "This terminal doesn't support colors.");
+		wgetch(stdscr);
+		waddch(stdscr, '\n');
+	}
+}
 
 int ncignoreinput(WINDOW*w) {
 	//catch and ignore all the pressed keys
@@ -38,24 +39,7 @@ int ncignoreinput(WINDOW*w) {
 	return r;
 }
 
-void nccolors(void) { //color init
-	int i;
-	if(has_colors()) {
-		start_color();
-		for(i = 0; i < 256; i++)
-			init_pair(i, i % 16, i / 16);
-	} else {
-		wprintw(stdscr, "This terminal doesn't support colors.");
-		wgetch(stdscr);
-		waddch(stdscr, '\n');
-	}
-}
-#define setcolor(w, c)		wattron(w, COLOR_PAIR((c)))
-#define unsetcolor(w, c)	wattroff(w, COLOR_PAIR((c)))
-#define setbgcolor(w, c)	wbkgd(w, COLOR_PAIR((c)))
-#define fgcolor(c)			((c) & 0b1111)						//get foreground color from c
-#define bgcolor(c)			((c) & 0b11110000)					//get background color from c
-#define revcolor(c)			((fgcolor(c) << 4) | ((c) >> 4))	//reverse background and foreground
+//PRINTING FUNCTIONS
 
 //fill a row with c at y from x for dx in w
 void ncfillrow(WINDOW*w, const int y, const int x, int dx, const char c, const short color) {
@@ -67,7 +51,6 @@ void ncfillrow(WINDOW*w, const int y, const int x, int dx, const char c, const s
 		waddch(w, c);
 	wmove(w, y, x);
 }
-
 //fill a column with c at x from y for dy in w
 void ncfillcol(WINDOW*w, const int y, const int x, int dy, const char c, const short color) {
 	int i;
@@ -77,7 +60,6 @@ void ncfillcol(WINDOW*w, const int y, const int x, int dy, const char c, const s
 		mvwaddch(w, y + i, x, c);
 	wmove(w, y, x);
 }
-
 //fill a whole window with c
 void ncfillwin(WINDOW*w, const char c, const short color) {
 	int i, j;
@@ -147,7 +129,6 @@ size_t ncprint(WINDOW*w, const char*o /*output str*/, ...) {
 	#undef triggerChar
 	return ol;
 }
-#define mvncprint(w, y, x, msg, ...)	(wmove((w), (y), (x)) == ERR ? ERR : ncprint((w), msg __VA_OPT__(,) __VA_ARGS__))
 
 //print in vertical (not formatted nor colorful yet)
 void ncprintv(WINDOW*w, const char*msg) {
@@ -157,57 +138,11 @@ void ncprintv(WINDOW*w, const char*msg) {
 	mvwaddch(w, y + i, x, msg[i]);
 	wmove(w, y + i, x); //ready to print in vertical again
 }
-#define mvncprintv(w, y, x, msg, ...) (wmove((w), (y), (x)) == ERR ? ERR : ncprintv((w), msg __VA_OPT__(,) __VA_ARGS__))
 
-//print a colorful message and wait for a input key to be pressed
-#define ncpause(w, msg, ...)			do { ncprint((w), msg __VA_OPT__(,) __VA_ARGS__); wrefresh(w); wgetch(w); waddch(w, '\n'); } while(0)
-#define mvncpause(w, y, x, msg, ...)	do { wmove((w), (y), (x)); ncpause((w), msg __VA_OPT__(,) __VA_ARGS__); } while(0)
-
-#define nctempmsg(w, y, x, msg, ...)	do { \
-	if(w != NULL) delwin(w); \
-	w = newwin(1, 0, y, x); \
-	mvncprint(w, 0, 0, msg __VA_OPT__(,) __VA_ARGS__); \
-	wrefresh(w); \
-	delwin(w); \
-} while(0);
-//I don't like the above macro. Actually I don't like all the macros I wrote
-
-//number input
-void ncnumber(WINDOW*w, const short y, const short x, short*toChange, const short min, const short max) {
-	int ch;
-	do {
-		mvwprintw(w, y, x, "%3d\b", *toChange);
-		wrefresh(w);
-		ch = wgetch(w);
-		switch(ch) {
-			case KEY_UP:
-				++(*toChange);
-				break;
-			case KEY_DOWN:
-				--(*toChange);
-				break;
-		}
-		if(*toChange < min) *toChange = max;
-		else if(*toChange > max) *toChange = min;
-	} while(ch != KEY_ENTER && ch != NC_ENTER);
-}
-
-void ncnumberchar(WINDOW*w, const short y, const short x, int8_t*toChange, const short min, const short max) {
-	short n = (short)*toChange;
-	ncnumber(w, y, x, &n, min, max);
-	*toChange = (int8_t)n;
-}
-
-//ask for a question, waiting for a key press which matches with answer's range (see chrange() in strstuff.h)
-char ncask(WINDOW*w, const char*question, const char*answer) {
-	int ch;
-	ncprint(w, question);
-	while(!chrange(ch = wgetch(w), answer));
-	return ch;
-}
+//INPUT FUNCTIONS
 
 //wait for user input (still not completed, since if lenght is less than maxSize, the output will overflow)
-size_t ncscan(const int starty, const int startx, const int length, const int maxSize, char*input, const char*allowed, const int color) {
+size_t ncscan(const int starty, const int startx, const int length, const int maxSize, char*input, const char*allowed, const short color) {
 	size_t l = strlen(input); //initial length if the string is not clear
 	int i = l /*current position*/, j, ch;
 	int rSize = maxSize; // right input's side length
@@ -280,6 +215,42 @@ size_t ncscan(const int starty, const int startx, const int length, const int ma
 	free(rinput);
 	return l;
 }
+//ask for a question, waiting for a key press which matches with answer's range (see chrange() in strstuff.h)
+char ncask(WINDOW*w, const char*question, const char*answer) {
+	int ch;
+	ncprint(w, question);
+	while(!chrange(ch = wgetch(w), answer));
+	return ch;
+}
+
+//number input
+short ncnumber(WINDOW*w, const short y, const short x, short*toChange, const short min, const short max) {
+	int ch;
+	do {
+		mvwprintw(w, y, x, "%3d\b", *toChange);
+		wrefresh(w);
+		ch = wgetch(w);
+		switch(tolower(ch)) {
+			case KEY_UP: case 'w':
+				++(*toChange);
+				break;
+			case KEY_DOWN: case 's';
+				--(*toChange);
+				break;
+		}
+		if(*toChange < min) *toChange = max;
+		else if(*toChange > max) *toChange = min;
+	} while(ch != KEY_ENTER && ch != NC_ENTER);
+	return *toChange;
+}
+
+int8_t ncnumberchar(WINDOW*w, const short y, const short x, int8_t*toChange, const short min, const short max) {
+	short n = (short)*toChange;
+	ncnumber(w, y, x, &n, min, max);
+	return (*toChange = (int8_t)n);
+}
+
+//pop-ups
 
 void ncpopup_printmsg(WINDOW*w, const int height, const int width, const bool is_oneline, const size_t outputlenght, const char*output, int*jolly_var) {
 	int i;
@@ -301,7 +272,6 @@ void ncpopup_printmsg(WINDOW*w, const int height, const int width, const bool is
 	}
 }
 
-#define NC_POPUP_CENTER(w, height, width)	(getmaxy(w) - height) / 2, (getmaxx(w) - width) / 2, height, width
 //print a popup with an info and an "OK" button
 void ncpopup_info(const int starty, const int startx, int height, const int width, const short color, const char*output, const char*ok_msg) {
 	const size_t outputlenght = strlen(output);
@@ -328,8 +298,6 @@ void ncpopup_info(const int starty, const int startx, int height, const int widt
 	delwin(w);
 }
 
-#define NC_POPUP_YES "Yes"
-#define NC_POPUP_NO "No"
 //print a popup with a "binary question" (YES/NO)
 bool ncpopup_bool(const int starty, const int startx, int height, const int width, const short color, const char*output, const char*yes_msg, const char*no_msg) {
 	const size_t outputlenght = strlen(output);
@@ -415,5 +383,4 @@ int ncmenu(const int starty, const int startx, const int height, const int width
 	return i;
 }
 
-#endif
 //END

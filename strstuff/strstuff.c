@@ -3,33 +3,28 @@
  * This work is licensed under the LGPLv3, see /LICENSE
  */
 
-//This header is part of cstuff
-//some string-related functions
-
-#ifndef __STRSTUFF_H
-#define __STRSTUFF_H
-
-#include <string.h>
-#include <ctype.h>
-
-#define swap(a, b) do { (a) += (b); (b) = (a) - (b); (a) -= (b); } while(0)
-
-void strreverse(char*input) {
+char*strreverse(char*input) {
 	size_t i, l = strlen(input);
 	for(i = 0; i < l / 2; i++)
 	swap(input[i], input[l-1-i]);
-}
-
-void strfill(char*arr, const char whit, const int l) {
-	int i;
-	for(i = 0; i < l; i++)
-		arr[i] = whit;
+	return input;
 }
 
 size_t findinstr(const char what, const char*where, const size_t length) {
 	size_t i = 0;
 	while(i < length) {
 		if(where[i] == what)
+			return i;
+		else
+			i++;
+	}
+	return -1;
+}
+
+size_t strfind(const char*input, const char*what) {
+	size_t i = 0, n = strlen(what), l = strlen(input) - (n - 1);
+	while(i < l) {
+		if(strncmp(input + i, what, n) == 0)
 			return i;
 		else
 			i++;
@@ -67,7 +62,7 @@ bool chrange(const char ch, const char*allowed) {
 	Only uppercase letters or lowercase d, s and t and spaces will be passed.*/
 	size_t i, l;
 	if(allowed[0] == 0) {
-		return ch >= 32 && ch < 256 && ch != 127;
+		return 32 <= ch && ch < 256 && ch != 127;
 	} else {
 		i = 1;
 		l = strlen(allowed);
@@ -83,5 +78,4 @@ bool chrange(const char ch, const char*allowed) {
 	return false;
 }
 
-#endif
 //END

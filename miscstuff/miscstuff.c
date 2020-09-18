@@ -3,15 +3,12 @@
  * This work is licensed under the LGPLv3, see /LICENSE
  */
 
-//This header is part of cstuff
-//Stuff about Maths
-
-#ifndef __MATHSTUFF_H
-#define __MATHSTUFF_H
-
-#include <stdarg.h>
-#include <stdlib.h>
-#include <math.h>
+void msleep(int ms) {
+	struct timeval tv;
+	tv.tv_sec  = ms / 1000;
+	tv.tv_usec = (ms % 1000) * 1000;
+	select (0, NULL, NULL, NULL, &tv);
+}
 
 int randomChoice(const unsigned short choices, ...) {
 	int r = 0;
@@ -28,5 +25,4 @@ int randomRange(const int min, const int max) {
 	return rand() % (min + max) + min;
 }
 
-#endif
 //END

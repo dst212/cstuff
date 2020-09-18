@@ -3,18 +3,6 @@
  * This work is licensed under the LGPLv3, see /LICENSE
  */
 
-//This header is part of cstuff
-//Stuff for wide characters
-
-#ifndef __CHSTUFF_H
-#define __CHSTUFF_H
-
-#include <wchar.h>
-#include <locale.h>
-
-#define CHSTUFF_GROUP 11
-
-#define CHSTUFF_BORDERS 124
 wchar_t charBorders(int id) {
 	switch(id % CHSTUFF_BORDERS) {
 		default:
@@ -145,7 +133,6 @@ wchar_t charBorders(int id) {
 	}
 }
 
-#define CHSTUFF_SYMBOLS 13
 wchar_t charSymbol(int id) {
 	switch(id % CHSTUFF_SYMBOLS) {
 		default:
@@ -165,5 +152,4 @@ wchar_t charSymbol(int id) {
 	}
 }
 
-#endif
 //END
