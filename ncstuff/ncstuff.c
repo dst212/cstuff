@@ -141,7 +141,7 @@ void ncprintv(WINDOW*w, const char*msg) {
 
 //INPUT FUNCTIONS
 
-//wait for user input (still not completed, since if lenght is less than maxSize, the output will overflow)
+//wait for user input (still not completed, since if length is less than maxSize, the output will overflow)
 size_t ncscan(const int starty, const int startx, const int length, const int maxSize, char*input, const char*allowed, const short color) {
 	size_t l = strlen(input); //initial length if the string is not clear
 	int i = l /*current position*/, j, ch;
@@ -252,15 +252,15 @@ int8_t ncnumberchar(WINDOW*w, const short y, const short x, int8_t*toChange, con
 
 //pop-ups
 
-void ncpopup_printmsg(WINDOW*w, const int height, const int width, const bool is_oneline, const size_t outputlenght, const char*output, int*jolly_var) {
+void ncpopup_printmsg(WINDOW*w, const int height, const int width, const bool is_oneline, const size_t outputlength, const char*output, int*jolly_var) {
 	int i;
 	if(is_oneline) {
 		mvwaddnstr(w, 2, 2, output + *jolly_var, width);
-		if(outputlenght - *jolly_var < width) {
+		if(outputlength - *jolly_var < width) {
 			waddstr(w, "   ");
-			waddnstr(w, output + *jolly_var, width - (outputlenght - *jolly_var) - 2);
+			waddnstr(w, output + *jolly_var, width - (outputlength - *jolly_var) - 2);
 		}
-		*jolly_var = (*jolly_var + 1) % outputlenght;
+		*jolly_var = (*jolly_var + 1) % outputlength;
 	} else {
 		*jolly_var = 0;
 		for(i = 0; i < height && *jolly_var == 0; i++) {
@@ -274,10 +274,10 @@ void ncpopup_printmsg(WINDOW*w, const int height, const int width, const bool is
 
 //print a popup with an info and an "OK" button
 void ncpopup_info(const int starty, const int startx, int height, const int width, const short color, const char*output, const char*ok_msg) {
-	const size_t outputlenght = strlen(output);
+	const size_t outputlength = strlen(output);
 	if(height <= 0)
-		height = outputlenght / width;
-	const bool is_oneline = (height == 1 && outputlenght > width);
+		height = outputlength / width;
+	const bool is_oneline = (height == 1 && outputlength > width);
 	int ch = ERR, jolly_var = 0 /*either a flag or a "shift-index"*/;
 	WINDOW*w;
 	w = newwin(height + 3, width + 2, starty - 1, startx - 1);
@@ -288,7 +288,7 @@ void ncpopup_info(const int starty, const int startx, int height, const int widt
 	if(is_oneline)
 		nodelay(w, true);
 	do {
-		ncpopup_printmsg(w, height, width, is_oneline, outputlenght, output, &jolly_var);
+		ncpopup_printmsg(w, height, width, is_oneline, outputlength, output, &jolly_var);
 		mvncprint(w, height + 3 - 2, width / 2 + 2/*padding*/ - (strlen(ok_msg) + 2) / 2, "@P %s @P", revcolor(color), ok_msg, color);
 		wrefresh(w);
 		if(is_oneline)
@@ -300,10 +300,10 @@ void ncpopup_info(const int starty, const int startx, int height, const int widt
 
 //print a popup with a "binary question" (YES/NO)
 bool ncpopup_bool(const int starty, const int startx, int height, const int width, const short color, const char*output, const char*yes_msg, const char*no_msg) {
-	const size_t outputlenght = strlen(output);
+	const size_t outputlength = strlen(output);
 	if(height <= 0)
-		height = outputlenght / width;
-	const bool is_oneline = (height == 1 && outputlenght > width);
+		height = outputlength / width;
+	const bool is_oneline = (height == 1 && outputlength > width);
 	const int width_shift = (strlen(yes_msg) + strlen(no_msg) + 5) / 2 + 1; //yes and no's size + blank spaces
 	bool r = true;
 	int ch = ERR, jolly_var = 0;
@@ -324,7 +324,7 @@ bool ncpopup_bool(const int starty, const int startx, int height, const int widt
 			r = !r;
 			break;
 		}
-		ncpopup_printmsg(w, height, width, is_oneline, outputlenght, output, &jolly_var);
+		ncpopup_printmsg(w, height, width, is_oneline, outputlength, output, &jolly_var);
 		mvncprint(w, height + 3 - 2, (width + 2) / 2 - width_shift,
 			"@P %s @P @P %s @P",
 			r ? revcolor(color) : color,
