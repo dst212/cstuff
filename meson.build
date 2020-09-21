@@ -1,6 +1,6 @@
 # Meson build file for cstuff libraries
 
-project('cstuff', 'c', version: '1.0', license: 'lgplv3', default_options: 'c_std=c11')
+project('cstuff', 'c', version: '2.0', license: 'lgplv3', default_options: 'c_std=c11')
 
 cc = meson.get_compiler('c')
 
