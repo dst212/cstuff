@@ -61,7 +61,7 @@ bool chrange(const char ch, const char*allowed) {
 	Only uppercase letters or lowercase d, s and t and spaces will be passed.*/
 	size_t i, l;
 	if(allowed[0] == 0) {
-		return 32 <= ch && ch < 256 && ch != 127;
+		return 32 <= ch /*&& ch < 256 */&& ch != 127;
 	} else {
 		i = 1;
 		l = strlen(allowed);
